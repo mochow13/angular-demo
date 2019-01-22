@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../services/data.service';
+import { Address } from '../../interfaces/address';
+import { Post } from '../../interfaces/post';
 
 @Component({
   selector: 'app-user',
@@ -11,8 +14,10 @@ export class UserComponent implements OnInit {
   email: string;
   address: Address;
   hobbies: string[];
+  posts: Post[];
+  edit: boolean = false;
 
-  constructor() {
+  constructor(private dataService:DataService) {
     console.log('constructor');
   }
 
@@ -27,12 +32,20 @@ export class UserComponent implements OnInit {
     console.log('ngoninit');
     this.hobbies = ['Violin', 'Coding', 'Deduction'];
     this.email = 'shelocked@gmail.com';
+    this.dataService.getPosts().subscribe(posts => {
+      this.posts = posts;
+      console.log(posts);
+    });
   }
 
   onClick() {
     console.log('Hit!');
     this.name = 'Eurus Holmes';
     // this.hobbies.push('Killing');
+  }
+
+  toggleEdit() {
+    this.edit = !this.edit;
   }
 
   addHobby(hobby) {
@@ -47,11 +60,4 @@ export class UserComponent implements OnInit {
       return hobby!==delHobby;
     });
   }
-}
-
-
-interface Address {
-  street: string,
-  city: string,
-  country: string,  
 }
